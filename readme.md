@@ -25,7 +25,7 @@ curl --location 'http://localhost:9999/api/vehicle/3?timestamp=2022-09-12%2010%3
 
 To test the `create` endpoint, you need to authenticate first, and then you can test using the following request.
 ```
-curl --location 'http://localhost:8080/api/vehicle' \
+curl --location 'http://localhost:9999/api/vehicle' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjp7fX0.sNFfJUwBtU_0Z3ZjzLAdoMX4GQFVZccpkn5cHLAEYug' \
 --data '{
@@ -34,7 +34,7 @@ curl --location 'http://localhost:8080/api/vehicle' \
  "state": "available"
 }'
 ```
-If you don't want to use port 8080, you need to change it on the docker-compose and in the nginx file.
+If you don't want to use port 9999, you need to change it on the docker-compose and in the nginx file.
 
 ## Changes on database
 To make it easier to implement an insert endpoint (out of scope), I have added an identity column on the table, not the best way, but the easiest. A better way would be create a GUID on the API and send the ID generated already, then you can add this insert on an insert queue or make a bulk insert if the amount of request is high.
