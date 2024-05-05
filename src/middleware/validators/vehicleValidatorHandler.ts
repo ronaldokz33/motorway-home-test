@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { object, string } from 'yup';
+import { ValidationError, object, string } from 'yup';
 import logger from '../../common/logs/pino';
 
 const vehicleSchema = object().shape({
@@ -21,25 +21,17 @@ export const vehicleCreateValidator = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const validationError: Array<string> = [];
-
   if (!req.body) {
-    validationError.push("can't be empty");
-    return res.status(400).json({ errors: validationError });
+    throw new ValidationError("can't be empty");
   }
 
   const { body: { make, state, model } = {} } = req;
 
-  try {
-    await vehicleSchema.validate({
-      make,
-      state,
-      model,
-    });
-  } catch (error: any) {
-    logger.info(error, `Invalid request`);
-    return res.status(400).json({ errors: error.errors });
-  }
+  await vehicleSchema.validate({
+    make,
+    state,
+    model,
+  });
 
   return next();
 };
@@ -55,7 +47,7 @@ export const vehicleGetValidator = (
 
   if (Number.isNaN(parsedId) || parsedId <= 0) {
     logger.info(`Invalid paramenter vehicleId: ${vehicleId}`);
-    return res.status(400).json({ message: 'Invalid paramenter vehicleId' });
+    throw new ValidationError('Invalid paramenter vehicleId');
   }
 
   if (timestamp) {
@@ -73,7 +65,7 @@ export const vehicleGetValidator = (
 
     if (!isDate(formatted)) {
       logger.info(`Invalid paramenter timestamp: ${timestamp}`);
-      return res.status(400).json({ message: 'Invalid paramenter timestamp' });
+      throw new ValidationError('Invalid paramenter timestamp');
     }
 
     req.query.timestamp = formatted;

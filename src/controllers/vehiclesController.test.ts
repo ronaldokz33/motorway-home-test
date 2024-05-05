@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { Request } from 'express-jwt';
 import * as vehicleService from '../services/vehicleService';
 import * as vehiclesController from './vehiclesController';
+import AppError from '../middleware/errorHandling/AppError';
 
 jest.mock('../common/logs/pino');
 jest.mock('../services/vehicleService');
@@ -81,11 +82,9 @@ describe("Test vehiclesController", function () {
         mockedGetVehicleStateByDate.mockResolvedValueOnce(null);
 
         //Act
-        await vehiclesController.Get(mockReq, mockRes as unknown as Response);
-
-        //Assert
-        expect(mockRes.status).toHaveBeenCalledWith(404);
-        expect(mockRes.json).toHaveBeenCalled();
+        await expect(async () => {
+            await vehiclesController.Get(mockReq, mockRes as unknown as Response);
+        }).rejects.toThrow(new AppError('not_found', 'No vehicles found', 404));
     });
 
     test("Get vehicle endpoint without timestamp", async function () {
@@ -142,16 +141,13 @@ describe("Test vehiclesController", function () {
             }
         } as unknown as Request;
 
-        const mockVehicle: Vehicle = new Vehicle(5, 'BMW', '120i', 'available');
         const mockRes = mockResponse();
 
         mockedCreateVehicle.mockResolvedValueOnce(null);
 
         //Act
-        await vehiclesController.Post(mockReq, mockRes as unknown as Response);
-
-        //Assert
-        expect(mockRes.status).toHaveBeenCalledWith(422);
-        expect(mockRes.json).toHaveBeenCalled();
+        await expect(async () => {
+            await vehiclesController.Post(mockReq, mockRes as unknown as Response);
+        }).rejects.toThrow(new AppError('entity_not_processed', 'Unprocessable Content', 422));
     });
 });

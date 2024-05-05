@@ -3,6 +3,9 @@ import {
   vehicleCreateValidator,
   vehicleGetValidator,
 } from './vehicleValidatorHandler';
+import { ValidationError } from 'yup';
+
+jest.mock('../../common/logs/pino');
 
 function mockResponse() {
   const response = {
@@ -86,10 +89,9 @@ describe('Test vehicleValidatorHandler', function () {
     const next = jest.fn();
 
     // Act
-    await vehicleCreateValidator(mockReq, mockRes as unknown as Response, next);
-
-    // Assert
-    expect(mockRes.status).toHaveBeenCalledWith(400);
+    await expect(async () => {
+      await vehicleCreateValidator(mockReq, mockRes as unknown as Response, next);
+    }).rejects.toThrow(ValidationError);
   });
 
   test('Create request missing model value', async function () {
@@ -106,10 +108,9 @@ describe('Test vehicleValidatorHandler', function () {
     const next = jest.fn();
 
     // Act
-    await vehicleCreateValidator(mockReq, mockRes as unknown as Response, next);
-
-    // Assert
-    expect(mockRes.status).toHaveBeenCalledWith(400);
+    await expect(async () => {
+      await vehicleCreateValidator(mockReq, mockRes as unknown as Response, next);
+    }).rejects.toThrow(ValidationError);
   });
 
   test('Create request missing state value', async function () {
@@ -126,10 +127,9 @@ describe('Test vehicleValidatorHandler', function () {
     const next = jest.fn();
 
     // Act
-    await vehicleCreateValidator(mockReq, mockRes as unknown as Response, next);
-
-    // Assert
-    expect(mockRes.status).toHaveBeenCalledWith(400);
+    await expect(async () => {
+      await vehicleCreateValidator(mockReq, mockRes as unknown as Response, next);
+    }).rejects.toThrow(ValidationError);
   });
 
   test('Get request missing vehicleId value', async function () {
@@ -147,10 +147,9 @@ describe('Test vehicleValidatorHandler', function () {
     const next = jest.fn();
 
     // Act
-    await vehicleGetValidator(mockReq, mockRes as unknown as Response, next);
-
-    // Assert
-    expect(mockRes.status).toHaveBeenCalledWith(400);
+    await expect(async () => {
+      await vehicleGetValidator(mockReq, mockRes as unknown as Response, next);
+    }).rejects.toThrow(ValidationError);
   });
 
   test('Get request invalid timestamp value', async function () {
@@ -168,9 +167,8 @@ describe('Test vehicleValidatorHandler', function () {
     const next = jest.fn();
 
     // Act
-    await vehicleGetValidator(mockReq, mockRes as unknown as Response, next);
-
-    // Assert
-    expect(mockRes.status).toHaveBeenCalledWith(400);
+    await expect(async () => {
+      await vehicleGetValidator(mockReq, mockRes as unknown as Response, next);
+    }).rejects.toThrow(ValidationError);
   });
 });

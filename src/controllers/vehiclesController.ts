@@ -4,6 +4,7 @@ import logger from '../common/logs/pino';
 import * as vehicleService from '../services/vehicleService';
 import VehicleRequest from '../models/request/vehicleRequest';
 import { formatResponse } from '../common/utils/utils';
+import AppError from '../middleware/errorHandling/AppError';
 
 export const Get = async (req: Request, res: Response) => {
   const { params: { vehicleId } = {}, query: { timestamp } = {} } = req;
@@ -27,7 +28,7 @@ export const Get = async (req: Request, res: Response) => {
     return res.status(200).json({ body: formatResponse(vehicleReponse) });
   }
 
-  return res.status(404).json({ message: 'No vehicles found' });
+  throw new AppError('not_found', 'No vehicles found', 404);
 };
 
 export const Post = async (req: Request, res: Response) => {
@@ -42,7 +43,7 @@ export const Post = async (req: Request, res: Response) => {
   const response = await vehicleService.CreateVehicle(request);
 
   if (response == null || response.Id <= 0) {
-    return res.status(422).json({ message: 'Unprocessable Content' });
+    throw new AppError('entity_not_processed', 'Unprocessable Content', 422);
   }
 
   return res

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import AppError from '../middleware/errorHandling/AppError';
 
 const createUserToken = (user: string): string => {
   if (!process.env.JWT_SECRET)
@@ -16,7 +17,7 @@ const Login = async (req: Request, res: Response) => {
   const { body: { user, password } = {} } = req;
 
   if (process.env.ADM_USER !== user || process.env.PASS_USER !== password)
-    return res.status(401).json({ message: 'Invalid user' });
+    throw new AppError('invalid_user', 'Invalid use', 401);
 
   return res.status(200).json({ token: createUserToken(user) });
 };
