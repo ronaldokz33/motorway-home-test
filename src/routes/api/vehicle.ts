@@ -9,8 +9,17 @@ import { tryCatch } from '../../common/utils/utils';
 
 const router = Router();
 
-router.get('/:vehicleId', tryCatch(vehicleGetValidator), tryCatch(vehiclesController.Get));
+router.get(
+  '/:vehicleId',
+  tryCatch(vehicleGetValidator),
+  tryCatch(vehiclesController.Get),
+);
 
-router.post('/', authHandler, tryCatch(vehicleCreateValidator), tryCatch(vehiclesController.Post));
+router.post(
+  '/',
+  authHandler,
+  tryCatch(vehicleCreateValidator),
+  tryCatch(vehiclesController.Post),
+);
 
 export default router;

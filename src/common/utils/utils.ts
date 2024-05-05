@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import _ from 'lodash';
 
-// eslint-disable-next-line import/prefer-default-export
 export const formatResponse = (object: any) => {
   if (object === null || typeof object !== 'object') {
     return object;
@@ -19,10 +18,12 @@ export const formatResponse = (object: any) => {
   return result;
 };
 
-export const tryCatch = (controller: Function) => async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    await controller(req, res, next);
-  } catch (error) {
-    return next(error);
-  }
-};
+export const tryCatch =
+  (controller: Function) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      return await controller(req, res, next);
+    } catch (error) {
+      return next(error);
+    }
+  };
