@@ -2,5 +2,5 @@
 export default {
     preset: 'ts-jest',
     testEnvironment: 'node',
-    modulePathIgnorePatterns: ['<rootDir>/dist/'],
+    modulePathIgnorePatterns: ['<rootDir>/build/'],
 };

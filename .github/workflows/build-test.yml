@@ -9,11 +9,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Build the stack
+        run: docker-compose up -d
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
-      - run: npm install
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
